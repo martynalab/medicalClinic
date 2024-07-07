@@ -5,11 +5,13 @@ import { AppComponent } from './app.component';
 import { PatientsComponent } from './patients/patients.component';
 import { AppRoutingModule } from './app-routing.module';
 import {FormsModule} from "@angular/forms";
+import {HomeComponent} from "./home/home.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     PatientsComponent,
+    HomeComponent
     // other components
   ],
   imports: [
