@@ -123,3 +123,7 @@
   opacity: 0;
   pointer-events: none;
 }
+
+body{
+  background-color: #007bff;
+}
