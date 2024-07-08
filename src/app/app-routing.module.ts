@@ -5,6 +5,7 @@ import {HomeComponent} from "./home/home.component";
 import {LayoutComponent} from "./layout/layout.component";
 import {RoomsComponent} from "./rooms/rooms.component";
 import {DoctorsComponent} from "./doctors/doctors.component";
+import {AppointmentsComponent} from "./appointments/appointments.component";
 
 // export const routes: Routes = [
 //   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
       { path: 'patients', component: PatientsComponent },
       { path: 'rooms', component: RoomsComponent },
       { path: 'doctors', component: DoctorsComponent },
+      { path: 'appointments', component: AppointmentsComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },

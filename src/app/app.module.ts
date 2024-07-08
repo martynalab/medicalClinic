@@ -11,6 +11,7 @@ import {LayoutComponent} from "./layout/layout.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {RoomsComponent} from "./rooms/rooms.component";
 import {DoctorsComponent} from "./doctors/doctors.component";
+import {AppointmentsComponent} from "./appointments/appointments.component";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {DoctorsComponent} from "./doctors/doctors.component";
     LayoutComponent,
     SidebarComponent,
     RoomsComponent,
-    DoctorsComponent
+    DoctorsComponent,
+    AppointmentsComponent
     // other components
   ],
   imports: [
