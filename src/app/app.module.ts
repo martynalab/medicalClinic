@@ -9,6 +9,8 @@ import {HomeComponent} from "./home/home.component";
 import { RouterModule } from '@angular/router';
 import {LayoutComponent} from "./layout/layout.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
+import {RoomsComponent} from "./rooms/rooms.component";
+import {DoctorsComponent} from "./doctors/doctors.component";
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import {SidebarComponent} from "./sidebar/sidebar.component";
     PatientsComponent,
     HomeComponent,
     LayoutComponent,
-    SidebarComponent
+    SidebarComponent,
+    RoomsComponent,
+    DoctorsComponent
     // other components
   ],
   imports: [

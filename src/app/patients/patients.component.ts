@@ -11,11 +11,11 @@ import {RouterModule} from "@angular/router";
   styleUrls: ['./patients.component.css']
 })
 
-export class PatientsComponent {
+export class PatientsComponent{
   showModal = false;
   isEditMode = false;
   showConfirmModal = false;
-  currentPatient = { name: '', age: '' };
+  currentPatient = { pesel: '', name: '', address: '' };
   currentIndex: number | null = null;
   deleteIndex: number | null = null;
   name = ""
@@ -26,13 +26,13 @@ export class PatientsComponent {
 
   openAddModal() {
     this.isEditMode = false;
-    this.currentPatient = { name: '', age: '' };
+    this.currentPatient = { pesel: '', name: '', address: ''  };
     this.toggleModal();
   }
 
   addPatient() {
     this.patients.push(this.currentPatient);
-    this.currentPatient = { name: '', age: '' };
+    this.currentPatient = { pesel: '', name: '', address: '' };
     this.toggleModal();
   }
 
@@ -47,7 +47,7 @@ export class PatientsComponent {
     if (this.currentIndex !== null) {
       this.patients[this.currentIndex] = { ...this.currentPatient };
     }
-    this.currentPatient = { name: '', age: '' };
+    this.currentPatient = { pesel: '', name: '', address: '' };
     this.currentIndex = null;
     this.toggleModal();
   }
@@ -76,8 +76,8 @@ export class PatientsComponent {
   }
 
   patients = [
-    { name: 'John Doe', age: '30' },
-    { name: 'Jane Smith', age: '25' },
+    { pesel:'123456112', name: 'John Doe', address: 'test' },
+    { pesel:'82726252',name: 'Jane Smith', address: 'test1' },
   ];
 }
 

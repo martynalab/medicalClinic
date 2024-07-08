@@ -1,0 +1,58 @@
+<div class="doctors-container">
+
+  <table class="content-table">
+    <thead>
+    <tr>
+      <th>PWZ</th>
+      <th>Name</th>
+      <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let doctor of doctors; let i = index">
+      <td>{{ doctor.pwz }}</td>
+      <td>{{ doctor.name }}</td>
+      <td>
+        <i class="edit-icon" (click)="editDoctor(i)">✎</i>
+        <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
+
+  <!-- adding/editing patient -->
+  <!--  <div class="modal" [class.hidden]="!showModal">-->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditMode ? 'Edit Doctor' : 'Add New Doctor' }}</h2>
+      <form (ngSubmit)="isEditMode ? updateDoctor() : addDoctor()">
+
+        <label for="pwz">PWZ:</label>
+        <input type="text" id="pwz" name="pwz" [(ngModel)]="currentDoctor.pwz" required>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="currentDoctor.name" required>
+
+        <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation popup for deleting patient -->
+  <!--  <div class="delete-modal" [class.hidden]="!showConfirmModal">-->
+  <div *ngIf="showConfirmModal" class="delete-modal">
+    <div class="delete-modal-content">
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete <strong>{{ name }}</strong>?</p>
+      <button class = "confirm" (click)="deleteDoctor()">Yes</button>
+      <button class = "confirm" (click)="toggleConfirmModal()">No</button>
+    </div>
+  </div>
+
+  <!-- Button to open adding/editing patient modal-->
+  <button class="add-doctor-btn" (click)="openAddModal()">Add Doctor</button>
+</div>
+

@@ -1,0 +1,67 @@
+<div class="rooms-container">
+
+  <table class="content-table">
+    <thead>
+    <tr>
+      <th>Number</th>
+      <th>Status</th>
+      <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let room of rooms; let i = index">
+      <td>{{ room.number }}</td>
+      <td>
+        <span *ngIf="room.status; else notAgreed">✔️</span>
+        <ng-template #notAgreed>❌</ng-template>
+      </td>
+      <td>
+        <i class="edit-icon" (click)="editRoom(i)">✎</i>
+        <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
+
+  <!-- adding/editing patient -->
+  <!--  <div class="modal" [class.hidden]="!showModal">-->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditMode ? 'Edit Room' : 'Add New Room' }}</h2>
+      <form (ngSubmit)="isEditMode ? updateRoom() : addRoom()">
+
+        <label for="number">Number:</label>
+        <input type="text" id="number" name="number" [(ngModel)]="currentRoom.number" required>
+
+<!--        <label class="checkbox-container">-->
+<!--        <label for="status">Status:</label>-->
+<!--        <input type="checkbox" id="status" name="status" [(ngModel)]="currentRoom.status">-->
+<!--        </label>-->
+
+        <label class="checkbox-container">
+          <input type="checkbox" id="status" name="status" [(ngModel)]="currentRoom.status">
+          <span class="checkmark"></span> Active
+        </label>
+
+        <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation popup for deleting patient -->
+  <!--  <div class="delete-modal" [class.hidden]="!showConfirmModal">-->
+  <div *ngIf="showConfirmModal" class="delete-modal">
+    <div class="delete-modal-content">
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete room number <strong>{{ number }}</strong>?</p>
+      <button class = "confirm" (click)="deleteRoom()">Yes</button>
+      <button class = "confirm" (click)="toggleConfirmModal()">No</button>
+    </div>
+  </div>
+
+  <!-- Button to open adding/editing patient modal-->
+  <button class="add-room-btn" (click)="openAddModal()">Add Room</button>
+</div>

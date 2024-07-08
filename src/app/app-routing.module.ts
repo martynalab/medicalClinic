@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { PatientsComponent } from './patients/patients.component';
 import {HomeComponent} from "./home/home.component";
 import {LayoutComponent} from "./layout/layout.component";
+import {RoomsComponent} from "./rooms/rooms.component";
+import {DoctorsComponent} from "./doctors/doctors.component";
 
 // export const routes: Routes = [
 //   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -18,6 +20,8 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'patients', component: PatientsComponent },
+      { path: 'rooms', component: RoomsComponent },
+      { path: 'doctors', component: DoctorsComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ]
   },

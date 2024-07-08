@@ -1,40 +1,60 @@
 <div class="patients-container">
-  <h2>Patients List</h2>
-  <ul class="patients-list">
-    <li *ngFor="let patient of patients; let i = index">
-      <span class="patient-info">{{ patient.name }}</span>
-      <span class="patient-info">{{ patient.age }}</span>
-      <span class="actions">
-                <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
-                <i class="edit-icon" (click)="editPatient(i)">✎</i>
-            </span>
-    </li>
-  </ul>
+
+  <table class="content-table">
+    <thead>
+    <tr>
+      <th>PESEL</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th> </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let patient of patients; let i = index">
+      <td>{{ patient.pesel }}</td>
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.address }}</td>
+      <td>
+        <i class="edit-icon" (click)="editPatient(i)">✎</i>
+        <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
 
   <!-- adding/editing patient -->
-  <div class="modal" [class.hidden]="!showModal">
+<!--  <div class="modal" [class.hidden]="!showModal">-->
+  <div *ngIf="showModal" class="modal">
     <div class="modal-content">
       <h2>{{ isEditMode ? 'Edit Patient' : 'Add New Patient' }}</h2>
       <form (ngSubmit)="isEditMode ? updatePatient() : addPatient()">
+
+        <label for="pesel">Pesel:</label>
+        <input type="text" id="pesel" name="pesel" [(ngModel)]="currentPatient.pesel" required>
+
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" [(ngModel)]="currentPatient.name" required>
 
-        <label for="age">Age:</label>
-        <input type="text" id="age" name="age" [(ngModel)]="currentPatient.age" required>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" [(ngModel)]="currentPatient.address" required>
 
-        <button type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
-        <button type="button" (click)="showModal = false">Cancel</button>
+
+        <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
       </form>
     </div>
   </div>
 
   <!-- Confirmation popup for deleting patient -->
-  <div class="delete-modal" [class.hidden]="!showConfirmModal">
+<!--  <div class="delete-modal" [class.hidden]="!showConfirmModal">-->
+    <div *ngIf="showConfirmModal" class="delete-modal">
     <div class="delete-modal-content">
       <h2>Confirm Deletion</h2>
       <p>Are you sure you want to delete <strong>{{ name }}</strong>?</p>
-      <button (click)="deletePatient()">Yes</button>
-      <button (click)="toggleConfirmModal()">No</button>
+      <button class = "confirm" (click)="deletePatient()">Yes</button>
+      <button class = "confirm" (click)="toggleConfirmModal()">No</button>
     </div>
   </div>
 
