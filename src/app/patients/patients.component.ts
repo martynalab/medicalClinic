@@ -41,7 +41,7 @@ export class PatientsComponent implements OnInit {
 
   addPatient() {
     this.patientService.addPatient(this.currentPatient);
-    this.patients = this.patientService.getPatients(); // Update the local patients array
+    this.patients = this.patientService.getPatients();
     this.currentPatient = {pesel: '', name: '', address: ''};
     this.toggleModal();
   }
@@ -56,7 +56,7 @@ export class PatientsComponent implements OnInit {
   updatePatient() {
     if (this.currentIndex !== null) {
       this.patientService.updatePatient(this.currentIndex, this.currentPatient);
-      this.patients = this.patientService.getPatients(); // Update the local patients array
+      this.patients = this.patientService.getPatients();
     }
     this.currentPatient = {pesel: '', name: '', address: ''};
     this.currentIndex = null;
@@ -75,7 +75,7 @@ export class PatientsComponent implements OnInit {
     console.log('Deleting patient at index:', this.deleteIndex);
     if (this.deleteIndex !== null) {
       this.patientService.deletePatient(this.deleteIndex);
-      this.patients = this.patientService.getPatients(); // Update the local patients array
+      this.patients = this.patientService.getPatients();
     }
     this.deleteIndex = null;
     this.name = "";
