@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import {DoctorModel} from "../model/Doctor.model";
 import {DoctorService} from "../service/doctor/doctor.service";
-import {DoctorModel} from "../model/doctor.model";
 
 @Component({
   selector: 'app-doctors',
@@ -16,14 +16,13 @@ export class DoctorsComponent implements OnInit {
   showModal = false;
   isEditMode = false;
   showConfirmModal = false;
-  currentDoctor: DoctorModel = {pwz: '', name: ''};
+  currentDoctor: DoctorModel = { pwz: '', name: '', workingHours: [] };
   currentIndex: number | null = null;
   deleteIndex: number | null = null;
   name: String = "";
   doctors: DoctorModel[] = [];
 
-  constructor(private doctorService: DoctorService) {
-  }
+  constructor(private doctorService: DoctorService) {}
 
   ngOnInit() {
     this.doctors = this.doctorService.getDoctors();
@@ -35,21 +34,21 @@ export class DoctorsComponent implements OnInit {
 
   openAddModal() {
     this.isEditMode = false;
-    this.currentDoctor = {pwz: '', name: ''};
+    this.currentDoctor = { pwz: '', name: '', workingHours: [] };
     this.toggleModal();
   }
 
   addDoctor() {
     this.doctorService.addDoctor(this.currentDoctor);
     this.doctors = this.doctorService.getDoctors(); // Update the local doctors array
-    this.currentDoctor = {pwz: '', name: ''};
+    this.currentDoctor = { pwz: '', name: '', workingHours: [] };
     this.toggleModal();
   }
 
   editDoctor(index: number) {
     this.isEditMode = true;
     this.currentIndex = index;
-    this.currentDoctor = {...this.doctors[index]};
+    this.currentDoctor = { ...this.doctors[index] };
     this.toggleModal();
   }
 
@@ -58,7 +57,7 @@ export class DoctorsComponent implements OnInit {
       this.doctorService.updateDoctor(this.currentIndex, this.currentDoctor);
       this.doctors = this.doctorService.getDoctors(); // Update the local doctors array
     }
-    this.currentDoctor = {pwz: '', name: ''};
+    this.currentDoctor = { pwz: '', name: '', workingHours: [] };
     this.currentIndex = null;
     this.toggleModal();
   }

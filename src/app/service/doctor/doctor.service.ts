@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {DoctorModel} from '../../model/doctor.model';
+import {DoctorModel} from "../../model/Doctor.model";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,14 @@ export class DoctorService {
 
   private doctors: DoctorModel[] = [];
 
+  private defaultWorkingHours = [
+    {day: 'Monday', start: '08:00', end: '16:00'},
+    {day: 'Tuesday', start: '08:00', end: '16:00'},
+    {day: 'Wednesday', start: '08:00', end: '16:00'},
+    {day: 'Thursday', start: '08:00', end: '16:00'},
+    {day: 'Friday', start: '08:00', end: '16:00'}
+  ];
+
   private saveDoctors() {
     localStorage.setItem(this.storageKey, JSON.stringify(this.doctors));
   }
@@ -23,8 +31,8 @@ export class DoctorService {
       this.doctors = JSON.parse(savedDoctors);
     } else {
       this.doctors = [
-        {pwz: '124322', name: 'John K'},
-        {pwz: '2221111', name: 'Jane D'}
+        {pwz: '124322', name: 'John K', workingHours: this.defaultWorkingHours},
+        {pwz: '2221111', name: 'Jane D', workingHours: this.defaultWorkingHours}
       ];
     }
   }
@@ -34,6 +42,7 @@ export class DoctorService {
   }
 
   addDoctor(doctor: DoctorModel) {
+    doctor.workingHours = this.defaultWorkingHours;
     this.doctors.push(doctor);
     this.saveDoctors();
   }
