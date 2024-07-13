@@ -1,1 +1,80 @@
-<p>appointments works!</p>
+<div class="appointments-container">
+  <table class="content-table">
+    <thead>
+    <tr>
+      <th>Patient</th>
+      <th>Doctor</th>
+      <th>Room</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let appointment of appointments; let i = index">
+      <td>{{ getPatientDisplayName(appointment.patientId) }}</td>
+      <td>{{ getDoctorDisplayName(appointment.doctorPwz) }}</td>
+      <td>{{ appointment.roomNumber }}</td>
+      <td>{{ appointment.date }}</td>
+      <td>{{ appointment.time }}</td>
+      <td>
+        <i class="edit-icon" (click)="editAppointment(i)">✎</i>
+        <i class="trash-icon" (click)="confirmDelete($event, appointment.id)">🗑️</i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
+
+  <!-- Adding/editing appointment -->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditMode ? 'Edit Appointment' : 'Add New Appointment' }}</h2>
+      <form (ngSubmit)="isEditMode ? updateAppointment() : addAppointment()">
+
+        <label for="patientId">Patient:</label>
+        <select id="patientId" name="patientId" [(ngModel)]="currentAppointment.patientId" required>
+          <option *ngFor="let patient of patients" [value]="patient.pesel">{{ getPatientDisplayName(patient.pesel) }}
+          </option>
+        </select>
+
+        <label for="doctorPwz">Doctor:</label>
+        <select id="doctorPwz" name="doctorPwz" [(ngModel)]="currentAppointment.doctorPwz"
+                (change)="generateAvailableTimes()" required>
+          <option *ngFor="let doctor of doctors" [value]="doctor.pwz">{{ getDoctorDisplayName(doctor.pwz) }}</option>
+        </select>
+
+        <label for="roomNumber">Room:</label>
+        <select id="roomNumber" name="roomNumber" [(ngModel)]="currentAppointment.roomNumber" required>
+          <option *ngFor="let room of rooms" [value]="room.number">{{ room.number }}</option>
+        </select>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" [(ngModel)]="currentAppointment.date"
+               (change)="generateAvailableTimes()" required>
+
+        <label for="time">Time:</label>
+        <select id="time" name="time" [(ngModel)]="currentAppointment.time" required>
+          <option *ngFor="let time of availableTimes" [value]="time">{{ time }}</option>
+        </select>
+
+        <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation popup for deleting appointment -->
+  <div *ngIf="showConfirmModal" class="delete-modal">
+    <div class="delete-modal-content">
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete this appointment?</p>
+      <button class="confirm" (click)="deleteAppointment()">Yes</button>
+      <button class="confirm" (click)="toggleConfirmModal()">No</button>
+    </div>
+  </div>
+
+  <!-- Button to open adding/editing appointment modal -->
+  <button class="add-appointment-btn" (click)="openAddModal()">Add Appointment</button>
+</div>

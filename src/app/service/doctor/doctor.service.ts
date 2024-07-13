@@ -31,8 +31,8 @@ export class DoctorService {
       this.doctors = JSON.parse(savedDoctors);
     } else {
       this.doctors = [
-        {pwz: '124322', name: 'John K', workingHours: this.defaultWorkingHours},
-        {pwz: '2221111', name: 'Jane D', workingHours: this.defaultWorkingHours}
+        {pwz: '12345', name: 'John Kowalski', workingHours: this.defaultWorkingHours},
+        {pwz: '54321', name: 'Jane Watson', workingHours: this.defaultWorkingHours}
       ];
     }
   }

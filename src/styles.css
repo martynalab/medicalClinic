@@ -2,7 +2,8 @@
 
 .rooms-container,
 .patients-container,
-.doctors-container {
+.doctors-container,
+.appointments-container{
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -114,7 +115,8 @@
 .modal-button,
 .add-patient-btn,
 .add-room-btn,
-.add-doctor-btn {
+.add-doctor-btn,
+.add-appointment-btn{
   padding: 10px 20px;
   background-color: #1a228a;
   color: #fff;

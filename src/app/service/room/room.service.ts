@@ -24,7 +24,7 @@ export class RoomService {
     } else {
       this.rooms = [
         {number: '2', status: true},
-        {number: '4', status: false}
+        {number: '4', status: true}
       ];
     }
   }

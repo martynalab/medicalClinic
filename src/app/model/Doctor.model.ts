@@ -1,6 +1,6 @@
 export interface DoctorModel {
-  pwz: String,
-  name: String,
+  pwz: string,
+  name: string,
   workingHours: WorkingHours[];
 }
 
