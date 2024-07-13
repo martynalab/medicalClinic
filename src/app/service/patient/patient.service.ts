@@ -23,8 +23,8 @@ export class PatientService {
       this.patients = JSON.parse(savedPatients);
     } else {
       this.patients = [
-        {pesel: '123456112', name: 'John Doe', address: 'test'},
-        {pesel: '82726252', name: 'Jane Smith', address: 'test1'}
+        {pesel: '64021213669', name: 'John Doe', address: 'Rzeszów, ul. Testowa 21'},
+        {pesel: '92070467869', name: 'Jane Smith', address: 'Tarnów, ul. Krakowska 11'}
       ];
     }
   }

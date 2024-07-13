@@ -18,7 +18,7 @@
       <td>{{ appointment.date }}</td>
       <td>{{ appointment.time }}</td>
       <td>
-        <i class="edit-icon" (click)="editAppointment(appointment.id)">✎</i>
+        <i class="edit-icon" (click)="editAppointment(i)">✎</i>
         <i class="trash-icon" (click)="confirmDelete($event, appointment.id)">🗑️</i>
       </td>
     </tr>
