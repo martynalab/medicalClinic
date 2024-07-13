@@ -1,17 +1,22 @@
 <div class="doctors-container">
-
   <table class="content-table">
     <thead>
     <tr>
       <th>PWZ</th>
       <th>Name</th>
-      <th> </th>
+      <th>Working Hours</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let doctor of doctors; let i = index">
       <td>{{ doctor.pwz }}</td>
       <td>{{ doctor.name }}</td>
+      <td>
+        <div *ngFor="let hours of doctor.workingHours">
+          {{ hours.day }}: {{ hours.start }} - {{ hours.end }}
+        </div>
+      </td>
       <td>
         <i class="edit-icon" (click)="editDoctor(i)">✎</i>
         <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
@@ -22,18 +27,29 @@
 
   <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
 
-  <!-- adding/editing patient -->
-  <!--  <div class="modal" [class.hidden]="!showModal">-->
+  <!-- adding/editing doctor -->
   <div *ngIf="showModal" class="modal">
     <div class="modal-content">
       <h2>{{ isEditMode ? 'Edit Doctor' : 'Add New Doctor' }}</h2>
       <form (ngSubmit)="isEditMode ? updateDoctor() : addDoctor()">
-
         <label for="pwz">PWZ:</label>
         <input type="text" id="pwz" name="pwz" [(ngModel)]="currentDoctor.pwz" required>
 
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" [(ngModel)]="currentDoctor.name" required>
+
+        <div *ngIf="isEditMode">
+          <div *ngFor="let hours of currentDoctor.workingHours; let i = index; trackBy: trackByFn">
+            <label>{{ hours.day }} Working Hours:</label>
+            <input type="time" [(ngModel)]="hours.start" name="start{{ i }}" required>
+            <input type="time" [(ngModel)]="hours.end" name="end{{ i }}" required>
+          </div>
+        </div>
+        <div *ngIf="!isEditMode">
+          <div *ngFor="let hours of currentDoctor.workingHours">
+            <label>{{ hours.day }} Working Hours: {{ hours.start }} - {{ hours.end }}</label>
+          </div>
+        </div>
 
         <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
         <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
@@ -41,18 +57,16 @@
     </div>
   </div>
 
-  <!-- Confirmation popup for deleting patient -->
-  <!--  <div class="delete-modal" [class.hidden]="!showConfirmModal">-->
+  <!-- Confirmation popup for deleting doctor -->
   <div *ngIf="showConfirmModal" class="delete-modal">
     <div class="delete-modal-content">
       <h2>Confirm Deletion</h2>
       <p>Are you sure you want to delete <strong>{{ name }}</strong>?</p>
-      <button class = "confirm" (click)="deleteDoctor()">Yes</button>
-      <button class = "confirm" (click)="toggleConfirmModal()">No</button>
+      <button class="confirm" (click)="deleteDoctor()">Yes</button>
+      <button class="confirm" (click)="toggleConfirmModal()">No</button>
     </div>
   </div>
 
-  <!-- Button to open adding/editing patient modal-->
+  <!-- Button to open adding/editing doctor modal -->
   <button class="add-doctor-btn" (click)="openAddModal()">Add Doctor</button>
 </div>
-
