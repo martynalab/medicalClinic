@@ -5,7 +5,7 @@
       <th>PWZ</th>
       <th>Name</th>
       <th>Working Hours</th>
-      <th> </th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -27,8 +27,7 @@
 
   <div class="modal-overlay" [class.show]="showModal || showConfirmModal"></div>
 
-  <!-- adding/editing patient -->
-  <!--  <div class="modal" [class.hidden]="!showModal">-->
+  <!-- adding/editing doctor -->
   <div *ngIf="showModal" class="modal">
     <div class="modal-content">
       <h2>{{ isEditMode ? 'Edit Doctor' : 'Add New Doctor' }}</h2>
@@ -38,6 +37,19 @@
 
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" [(ngModel)]="currentDoctor.name" required>
+
+        <div *ngIf="isEditMode">
+          <div *ngFor="let hours of currentDoctor.workingHours; let i = index; trackBy: trackByFn">
+            <label>{{ hours.day }} Working Hours:</label>
+            <input type="time" [(ngModel)]="hours.start" name="start{{ i }}" required>
+            <input type="time" [(ngModel)]="hours.end" name="end{{ i }}" required>
+          </div>
+        </div>
+        <div *ngIf="!isEditMode">
+          <div *ngFor="let hours of currentDoctor.workingHours">
+            <label>{{ hours.day }} Working Hours: {{ hours.start }} - {{ hours.end }}</label>
+          </div>
+        </div>
 
         <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
         <button class="cancel" type="button" (click)="showModal = false">Cancel</button>
