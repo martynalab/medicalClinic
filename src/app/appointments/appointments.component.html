@@ -18,8 +18,8 @@
       <td>{{ appointment.date }}</td>
       <td>{{ appointment.time }}</td>
       <td>
-        <i class="edit-icon" (click)="editAppointment(i)">✎</i>
-        <i class="trash-icon" (click)="confirmDelete($event, i)">🗑️</i>
+        <i class="edit-icon" (click)="editAppointment(appointment.id)">✎</i>
+        <i class="trash-icon" (click)="confirmDelete($event, appointment.id)">🗑️</i>
       </td>
     </tr>
     </tbody>
@@ -40,7 +40,8 @@
         </select>
 
         <label for="doctorPwz">Doctor:</label>
-        <select id="doctorPwz" name="doctorPwz" [(ngModel)]="currentAppointment.doctorPwz" required>
+        <select id="doctorPwz" name="doctorPwz" [(ngModel)]="currentAppointment.doctorPwz"
+                (change)="generateAvailableTimes()" required>
           <option *ngFor="let doctor of doctors" [value]="doctor.pwz">{{ getDoctorDisplayName(doctor.pwz) }}</option>
         </select>
 
@@ -50,10 +51,13 @@
         </select>
 
         <label for="date">Date:</label>
-        <input type="date" id="date" name="date" [(ngModel)]="currentAppointment.date" required>
+        <input type="date" id="date" name="date" [(ngModel)]="currentAppointment.date"
+               (change)="generateAvailableTimes()" required>
 
         <label for="time">Time:</label>
-        <input type="time" id="time" name="time" [(ngModel)]="currentAppointment.time" required>
+        <select id="time" name="time" [(ngModel)]="currentAppointment.time" required>
+          <option *ngFor="let time of availableTimes" [value]="time">{{ time }}</option>
+        </select>
 
         <button class="save" type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
         <button class="cancel" type="button" (click)="showModal = false">Cancel</button>

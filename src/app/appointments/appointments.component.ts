@@ -37,6 +37,8 @@ export class AppointmentsComponent implements OnInit {
   };
   currentIndex: number | null = null;
 
+  availableTimes: string[] = [];
+
   constructor(
     private appointmentService: AppointmentService,
     private doctorService: DoctorService,
@@ -82,10 +84,13 @@ export class AppointmentsComponent implements OnInit {
   }
 
   addAppointment() {
-    // Assuming appointment ID is generated automatically by the service
-    this.appointmentService.addAppointment(this.currentAppointment);
-    this.showModal = false;
-    this.loadAppointments(); // Reload appointments after adding
+    if (this.validateAppointment()) {
+      this.appointmentService.addAppointment(this.currentAppointment);
+      this.showModal = false;
+      this.loadAppointments();
+    } else {
+      alert('Selected time is not available or outside of working hours.');
+    }
   }
 
   editAppointment(index: number) {
@@ -96,14 +101,20 @@ export class AppointmentsComponent implements OnInit {
   }
 
   updateAppointment() {
-    if (this.currentIndex !== null) {
-      this.appointmentService.updateAppointment(this.currentAppointment);
-      this.showModal = false;
-      this.loadAppointments();
+    if (this.validateAppointment()) {
+      if (this.currentIndex !== null) {
+        this.appointmentService.updateAppointment(this.currentAppointment);
+        this.showModal = false;
+        this.loadAppointments();
+      }
+    } else {
+      alert('Selected time is not available or outside of working hours.');
     }
   }
 
   confirmDelete(event: Event, index: number) {
+    console.log(index)
+    console.log(this.appointments)
     event.stopPropagation();
     this.currentIndex = index;
     this.showConfirmModal = true;
@@ -113,7 +124,7 @@ export class AppointmentsComponent implements OnInit {
     if (this.currentIndex !== null) {
       this.appointmentService.deleteAppointment(this.currentIndex);
       this.showConfirmModal = false;
-      this.loadAppointments(); // Reload appointments after deleting
+      this.loadAppointments();
     }
   }
 
@@ -131,4 +142,58 @@ export class AppointmentsComponent implements OnInit {
     return doctor ? `${doctor.name} (${doctor.pwz})` : '';
   }
 
+  validateAppointment(): boolean {
+    const doctor = this.doctors.find(d => d.pwz === this.currentAppointment.doctorPwz);
+    if (!doctor) return false;
+
+    const appointmentDate = new Date(this.currentAppointment.date);
+    const appointmentTime = this.currentAppointment.time;
+
+    const workingHours = doctor.workingHours.find(wh => wh.day === this.getDayOfWeek(appointmentDate));
+    if (!workingHours) return false;
+
+    const startTime = new Date(`1970-01-01T${workingHours.start}`);
+    const endTime = new Date(`1970-01-01T${workingHours.end}`);
+    const appointmentDateTime = new Date(`1970-01-01T${appointmentTime}`);
+
+    if (appointmentDateTime < startTime || appointmentDateTime > endTime) {
+      return false;
+    }
+
+    const existingAppointments = this.appointments.filter(
+      a =>
+        a.doctorPwz === this.currentAppointment.doctorPwz &&
+        a.date === this.currentAppointment.date &&
+        a.time === this.currentAppointment.time &&
+        a.id !== this.currentAppointment.id
+    );
+
+    return existingAppointments.length <= 0;
+  }
+
+  private getDayOfWeek(date: Date): string {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+  }
+
+  generateAvailableTimes(): void {
+    this.availableTimes = [];
+
+    const doctor = this.doctors.find(d => d.pwz === this.currentAppointment.doctorPwz);
+    if (!doctor) return;
+
+    const workingHours = doctor.workingHours.find(wh => wh.day === this.getDayOfWeek(new Date(this.currentAppointment.date)));
+    if (!workingHours) return;
+
+    const startTime = new Date(`1970-01-01T${workingHours.start}`);
+    const endTime = new Date(`1970-01-01T${workingHours.end}`);
+
+    let currentTime = new Date(startTime);
+
+    while (currentTime <= endTime) {
+      const formattedTime = currentTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+      this.availableTimes.push(formattedTime);
+      currentTime.setMinutes(currentTime.getMinutes() + 30)
+    }
+  }
 }
