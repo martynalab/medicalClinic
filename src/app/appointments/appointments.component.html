@@ -1,11 +1,10 @@
 <div class="appointments-container">
-
   <table class="content-table">
     <thead>
     <tr>
-      <th>Patient ID</th>
-      <th>Doctor PWZ</th>
-      <th>Room Number</th>
+      <th>Patient</th>
+      <th>Doctor</th>
+      <th>Room</th>
       <th>Date</th>
       <th>Time</th>
       <th></th>
@@ -13,8 +12,8 @@
     </thead>
     <tbody>
     <tr *ngFor="let appointment of appointments; let i = index">
-      <td>{{ appointment.patientId }}</td>
-      <td>{{ appointment.doctorPwz }}</td>
+      <td>{{ getPatientDisplayName(appointment.patientId) }}</td>
+      <td>{{ getDoctorDisplayName(appointment.doctorPwz) }}</td>
       <td>{{ appointment.roomNumber }}</td>
       <td>{{ appointment.date }}</td>
       <td>{{ appointment.time }}</td>
@@ -34,15 +33,18 @@
       <h2>{{ isEditMode ? 'Edit Appointment' : 'Add New Appointment' }}</h2>
       <form (ngSubmit)="isEditMode ? updateAppointment() : addAppointment()">
 
-        <label for="patientId">Patient ID:</label>
-        <input type="text" id="patientId" name="patientId" [(ngModel)]="currentAppointment.patientId" required>
-
-        <label for="doctorPwz">Doctor PWZ:</label>
-        <select id="doctorPwz" name="doctorPwz" [(ngModel)]="currentAppointment.doctorPwz" required>
-          <option *ngFor="let doctor of doctors" [value]="doctor.pwz">{{ doctor.name }}</option>
+        <label for="patientId">Patient:</label>
+        <select id="patientId" name="patientId" [(ngModel)]="currentAppointment.patientId" required>
+          <option *ngFor="let patient of patients" [value]="patient.pesel">{{ getPatientDisplayName(patient.pesel) }}
+          </option>
         </select>
 
-        <label for="roomNumber">Room Number:</label>
+        <label for="doctorPwz">Doctor:</label>
+        <select id="doctorPwz" name="doctorPwz" [(ngModel)]="currentAppointment.doctorPwz" required>
+          <option *ngFor="let doctor of doctors" [value]="doctor.pwz">{{ getDoctorDisplayName(doctor.pwz) }}</option>
+        </select>
+
+        <label for="roomNumber">Room:</label>
         <select id="roomNumber" name="roomNumber" [(ngModel)]="currentAppointment.roomNumber" required>
           <option *ngFor="let room of rooms" [value]="room.number">{{ room.number }}</option>
         </select>

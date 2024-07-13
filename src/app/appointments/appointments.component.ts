@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {Appointment} from "../model/Appointment.model";
-import {DoctorModel} from "../model/Doctor.model";
-import {RoomModel} from "../model/Room.model";
-import {AppointmentService} from "../service/appointment/appointment.service";
-import {DoctorService} from "../service/doctor/doctor.service";
-import {RoomService} from "../service/room/room.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
+import {Appointment} from "../model/Appointment.model";
+import {DoctorModel} from "../model/Doctor.model";
+import {PatientModel} from "../model/Patient.model";
+import {RoomModel} from "../model/Room.model";
+import {AppointmentService} from "../service/appointment/appointment.service";
+import {DoctorService} from "../service/doctor/doctor.service";
+import {PatientService} from "../service/patient/patient.service";
+import {RoomService} from "../service/room/room.service";
 
 @Component({
   selector: 'app-appointments',
@@ -19,16 +21,26 @@ import {RouterModule} from "@angular/router";
 export class AppointmentsComponent implements OnInit {
   appointments: Appointment[] = [];
   doctors: DoctorModel[] = [];
+  patients: PatientModel[] = [];
   rooms: RoomModel[] = [];
-  currentAppointment: Appointment = {id: 0, patientId: '', doctorPwz: '', roomNumber: '', date: '', time: ''};
-  isEditMode = false;
+
   showModal = false;
   showConfirmModal = false;
-  appointmentToDelete: number | null = null;
+  isEditMode = false;
+  currentAppointment: Appointment = {
+    id: 0,
+    patientId: '',
+    doctorPwz: '',
+    roomNumber: '',
+    date: '',
+    time: ''
+  };
+  currentIndex: number | null = null;
 
   constructor(
     private appointmentService: AppointmentService,
     private doctorService: DoctorService,
+    private patientService: PatientService,
     private roomService: RoomService
   ) {
   }
@@ -36,72 +48,87 @@ export class AppointmentsComponent implements OnInit {
   ngOnInit(): void {
     this.loadAppointments();
     this.loadDoctors();
+    this.loadPatients();
     this.loadRooms();
   }
 
-  loadAppointments(): void {
+  loadAppointments() {
     this.appointments = this.appointmentService.getAppointments();
   }
 
-  loadDoctors(): void {
+  loadDoctors() {
     this.doctors = this.doctorService.getDoctors();
   }
 
-  loadRooms(): void {
+  loadPatients() {
+    this.patients = this.patientService.getPatients();
+  }
+
+  loadRooms() {
     this.rooms = this.roomService.getRooms();
   }
 
-  addAppointment(): void {
-    this.currentAppointment.id = new Date().getTime();
+  openAddModal() {
+    this.isEditMode = false;
+    this.currentAppointment = {
+      id: 0,
+      patientId: '',
+      doctorPwz: '',
+      roomNumber: '',
+      date: '',
+      time: ''
+    };
+    this.showModal = true;
+  }
+
+  addAppointment() {
+    // Assuming appointment ID is generated automatically by the service
     this.appointmentService.addAppointment(this.currentAppointment);
-    this.closeModal();
-    this.loadAppointments();
+    this.showModal = false;
+    this.loadAppointments(); // Reload appointments after adding
   }
 
-  updateAppointment(): void {
-    this.appointmentService.updateAppointment(this.currentAppointment);
-    this.closeModal();
-    this.loadAppointments();
-  }
-
-  editAppointment(index: number): void {
+  editAppointment(index: number) {
     this.isEditMode = true;
+    this.currentIndex = index;
     this.currentAppointment = {...this.appointments[index]};
     this.showModal = true;
   }
 
-  openAddModal(): void {
-    this.isEditMode = false;
-    this.currentAppointment = {id: 0, patientId: '', doctorPwz: '', roomNumber: '', date: '', time: ''};
-    this.showModal = true;
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-    this.resetForm();
-  }
-
-  confirmDelete(event: Event, index: number): void {
-    event.stopPropagation();
-    this.appointmentToDelete = this.appointments[index].id;
-    this.showConfirmModal = true;
-  }
-
-  deleteAppointment(): void {
-    if (this.appointmentToDelete !== null) {
-      this.appointmentService.deleteAppointment(this.appointmentToDelete);
-      this.appointmentToDelete = null;
-      this.showConfirmModal = false;
+  updateAppointment() {
+    if (this.currentIndex !== null) {
+      this.appointmentService.updateAppointment(this.currentAppointment);
+      this.showModal = false;
       this.loadAppointments();
     }
   }
 
-  toggleConfirmModal(): void {
+  confirmDelete(event: Event, index: number) {
+    event.stopPropagation();
+    this.currentIndex = index;
+    this.showConfirmModal = true;
+  }
+
+  deleteAppointment() {
+    if (this.currentIndex !== null) {
+      this.appointmentService.deleteAppointment(this.currentIndex);
+      this.showConfirmModal = false;
+      this.loadAppointments(); // Reload appointments after deleting
+    }
+  }
+
+  toggleConfirmModal() {
     this.showConfirmModal = !this.showConfirmModal;
   }
 
-  resetForm(): void {
-    this.currentAppointment = {id: 0, patientId: '', doctorPwz: '', roomNumber: '', date: '', time: ''};
-    this.isEditMode = false;
+  getPatientDisplayName(pesel: string): string {
+    const patient = this.patients.find(p => p.pesel === pesel);
+    return patient ? `${patient.name} (${patient.pesel})` : '';
   }
+
+  getDoctorDisplayName(pwz: string): string {
+    const doctor = this.doctors.find(d => d.pwz === pwz);
+    return doctor ? `${doctor.name} (${doctor.pwz})` : '';
+  }
+
 }
